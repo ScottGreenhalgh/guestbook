@@ -14,15 +14,17 @@ const templateMessage = [
   "super fancy message",
   "Fell from a tree",
 ];
+const defaultLikes = 0;
 //PostgreSQL
 async function resetDb() {
   await db.query("TRUNCATE guestbook RESTART IDENTITY");
   for (let i = 0; templateUsername.length > i; i++) {
     await db.query(
-      "INSERT INTO guestbook (username, message) VALUES ($1, $2)",
-      [templateUsername[i], templateMessage[i]]
+      "INSERT INTO guestbook (username, message, likes) VALUES ($1, $2, $3)",
+      [templateUsername[i], templateMessage[i], defaultLikes]
     );
   }
 }
 
 resetDb();
+console.log("resetting database");

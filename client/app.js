@@ -1,4 +1,10 @@
-const hostLocation = "http://localhost";
+// ------ Global Variables -------
+const hostLocation = "https://guestbook-server-sz7r.onrender.com";
+//https://guestbook-server-sz7r.onrender.com http://localhost
+const hostPort = ":8080";
+const guestbookContainer = document.getElementById("guestbookContainer");
+
+// -------- POST ----------
 
 async function handleFormSubmit(event, formId, endpoint) {
   event.preventDefault();
@@ -9,7 +15,7 @@ async function handleFormSubmit(event, formId, endpoint) {
   const data = Object.fromEntries(formData);
   console.log(data);
   // fetch post request to add new entry to endpoint
-  const response = await fetch(hostLocation + `:8080/${endpoint}`, {
+  const response = await fetch(hostLocation + hostPort + "/" + endpoint, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -21,37 +27,113 @@ async function handleFormSubmit(event, formId, endpoint) {
   console.log(`From the server (${endpoint}): `, responseData);
   //reset the form
   form.reset();
-  // add new guest to the screen
-  getGuestbook();
+  // updated items on screen
+  getHandler(endpoint, guestbookContainer);
 }
 
 document.getElementById("guestbook").addEventListener("submit", (event) => {
   handleFormSubmit(event, "guestbook", "guestbook");
 });
 
-const guestbookContainer = document.getElementById("guestbookContainer");
+// --------- GET -----------
 
-async function getGuestbook() {
-  const response = await fetch("http://localhost:8080/guestbook");
+async function getHandler(endpoint, container) {
+  const response = await fetch(hostLocation + hostPort + "/" + endpoint);
   const data = await response.json();
   console.log(data);
   // clear page
-  guestbookContainer.innerHTML = "";
-  // loop through guestbook and add to page
-  data.forEach(function (guest) {
+  container.innerHTML = "";
+  // loop through and add to page
+  data.forEach(function (dbData) {
     const p = document.createElement("p");
-    p.textContent = `Guest: ${guest.username} | Message: ${guest.message}`;
-    guestbookContainer.appendChild(p);
+    const button = document.createElement("button");
+    const likeButton = document.createElement("button");
+
+    p.textContent = `User: ${dbData.username} | Message: ${dbData.message}`;
+    p.className = "database-text";
+
+    button.textContent = "Delete";
+    button.className = "delete-button";
+    button.id = dbData.id;
+
+    likeButton.textContent = "👍 " + dbData.likes;
+    likeButton.className = "like-button";
+    likeButton.id = "like" + dbData.id;
+
+    container.appendChild(p);
+    container.appendChild(button);
+    container.appendChild(likeButton);
   });
 }
 
-getGuestbook();
+getHandler("guestbook", guestbookContainer);
 
-function delay(time) {
-  return new Promise((resolve) => setTimeout(resolve, time));
-}
+// --------- Delete & Like ----------
 
-async function autoFetchData() {
-  await delay(30_000);
-  getGuestbook();
-}
+guestbookContainer.addEventListener("click", async function (event) {
+  // delete button
+  if (event.target.classList.contains("delete-button")) {
+    const id = event.target.id;
+    console.log("Delete button clicked for id: " + id);
+    // send delete request
+    const response = await fetch(hostLocation + hostPort + "/guestbook/" + id, {
+      method: "DELETE",
+    });
+    // recieve response
+    const responseData = await response.json();
+    console.log(`From the server (delete): `, responseData);
+    // update items on screen
+    getHandler("guestbook", guestbookContainer);
+  }
+
+  // like button
+  if (event.target.classList.contains("like-button")) {
+    const id = event.target.id.replace("like", ""); //grabbing just the id
+    // local variable of db id
+    const likedEntries = JSON.parse(localStorage.getItem("likedEntries")) || [];
+    // liked already?
+    const isLiked = likedEntries.includes(id);
+    // like or unlike
+    const action = isLiked ? "unlike" : "like";
+    console.log("Like button pressed for id: " + id);
+    // PUT request to increment likes count
+    const response = await fetch(
+      hostLocation + hostPort + "/guestbook/" + id + "/like",
+      {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ action }), // send like or unlike
+      }
+    );
+
+    const responseData = await response.json();
+    console.log(`From the server (${action}): `, responseData);
+    // update local storage with either like or unlike
+    if (action === "like") {
+      likedEntries.push(id);
+    } else {
+      const index = likedEntries.indexOf(id);
+      if (index > -1) {
+        likedEntries.splice(index, 1); //remove liked entry
+      }
+    }
+    localStorage.setItem("likedEntries", JSON.stringify(likedEntries));
+    //update text element
+    event.target.textContent = "👍 " + responseData.likes;
+    // update items on screen
+    getHandler("guestbook", guestbookContainer);
+  }
+});
+
+// ----------- Update ------------
+
+// function delay(time) {
+//   return new Promise((resolve) => setTimeout(resolve, time));
+// }
+//update page every 30 seconds
+// async function autoFetchData() {
+//   await delay(30_000);
+//   getHandler("guestbook", guestbookContainer);
+// }
