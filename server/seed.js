@@ -29,3 +29,12 @@ async function resetDb() {
 
 resetDb();
 console.log("resetting database");
+
+// Table created with:
+
+// CREATE TABLE guestbook (
+//   id INT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
+//   username TEXT,
+//   message TEXT,
+//   likes INT
+// );

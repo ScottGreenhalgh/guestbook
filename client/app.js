@@ -2,6 +2,7 @@
 const hostPrefix = import.meta.env.VITE_HOST_PREFIX;
 const hostLocation = import.meta.env.VITE_HOST_LOCATION;
 const hostPort = import.meta.env.VITE_HOST_PORT;
+const wsProtocol = import.meta.env.VITE_WS_HOST;
 
 const guestbookContainer = document.getElementById("guestbookContainer");
 
@@ -54,6 +55,9 @@ async function getHandler(endpoint, container) {
     const p = document.createElement("p");
     const button = document.createElement("button");
     const likeButton = document.createElement("button");
+    const div = document.createElement("div");
+
+    div.className = "message-div";
 
     p.textContent = `User: ${dbData.username} | Message: ${dbData.message}`;
     p.className = "database-text";
@@ -66,9 +70,11 @@ async function getHandler(endpoint, container) {
     likeButton.className = "like-button";
     likeButton.id = "like" + dbData.id;
 
-    container.appendChild(p);
-    container.appendChild(button);
-    container.appendChild(likeButton);
+    div.appendChild(p);
+    div.appendChild(button);
+    div.appendChild(likeButton);
+
+    container.appendChild(div);
   });
 }
 
@@ -138,7 +144,9 @@ guestbookContainer.addEventListener("click", async function (event) {
 
 // ----------- Update ------------
 
-const socket = new WebSocket("ws://" + hostLocation + hostPort + "/guestbook");
+const socket = new WebSocket(
+  wsProtocol + hostLocation + hostPort + "/guestbook"
+);
 
 socket.addEventListener("message", function (event) {
   const update = JSON.parse(event.data);
