@@ -17,6 +17,7 @@ const templateMessage = [
 const defaultLikes = 0;
 //PostgreSQL
 async function resetDb() {
+  //remove all data, reset identity back to start counting from 1
   await db.query("TRUNCATE guestbook RESTART IDENTITY");
   for (let i = 0; templateUsername.length > i; i++) {
     await db.query(

@@ -1,7 +1,8 @@
 // ------ Global Variables -------
-const hostLocation = "https://guestbook-server-sz7r.onrender.com";
-//https://guestbook-server-sz7r.onrender.com http://localhost
-const hostPort = ":8080";
+const hostPrefix = import.meta.env.VITE_HOST_PREFIX;
+const hostLocation = import.meta.env.VITE_HOST_LOCATION;
+const hostPort = import.meta.env.VITE_HOST_PORT;
+
 const guestbookContainer = document.getElementById("guestbookContainer");
 
 // -------- POST ----------
@@ -15,13 +16,16 @@ async function handleFormSubmit(event, formId, endpoint) {
   const data = Object.fromEntries(formData);
   console.log(data);
   // fetch post request to add new entry to endpoint
-  const response = await fetch(hostLocation + hostPort + "/" + endpoint, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(data),
-  });
+  const response = await fetch(
+    hostPrefix + hostLocation + hostPort + "/" + endpoint,
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
+    }
+  );
   //recieve response
   const responseData = await response.json();
   console.log(`From the server (${endpoint}): `, responseData);
@@ -38,7 +42,9 @@ document.getElementById("guestbook").addEventListener("submit", (event) => {
 // --------- GET -----------
 
 async function getHandler(endpoint, container) {
-  const response = await fetch(hostLocation + hostPort + "/" + endpoint);
+  const response = await fetch(
+    hostPrefix + hostLocation + hostPort + "/" + endpoint
+  );
   const data = await response.json();
   console.log(data);
   // clear page
@@ -76,9 +82,12 @@ guestbookContainer.addEventListener("click", async function (event) {
     const id = event.target.id;
     console.log("Delete button clicked for id: " + id);
     // send delete request
-    const response = await fetch(hostLocation + hostPort + "/guestbook/" + id, {
-      method: "DELETE",
-    });
+    const response = await fetch(
+      hostPrefix + hostLocation + hostPort + "/guestbook/" + id,
+      {
+        method: "DELETE",
+      }
+    );
     // recieve response
     const responseData = await response.json();
     console.log(`From the server (delete): `, responseData);
@@ -98,7 +107,7 @@ guestbookContainer.addEventListener("click", async function (event) {
     console.log("Like button pressed for id: " + id);
     // PUT request to increment likes count
     const response = await fetch(
-      hostLocation + hostPort + "/guestbook/" + id + "/like",
+      hostPrefix + hostLocation + hostPort + "/guestbook/" + id + "/like",
       {
         method: "PUT",
         headers: {
@@ -129,11 +138,25 @@ guestbookContainer.addEventListener("click", async function (event) {
 
 // ----------- Update ------------
 
-// function delay(time) {
-//   return new Promise((resolve) => setTimeout(resolve, time));
-// }
-//update page every 30 seconds
-// async function autoFetchData() {
-//   await delay(30_000);
-//   getHandler("guestbook", guestbookContainer);
-// }
+const socket = new WebSocket("ws://" + hostLocation + hostPort + "/guestbook");
+
+socket.addEventListener("message", function (event) {
+  const update = JSON.parse(event.data);
+  // which data are we recieving
+  switch (update.type) {
+    case "newPost":
+      console.log("New post added: ", update.data);
+      getHandler("guestbook", guestbookContainer);
+      break;
+    case "updateLikes":
+      console.log("Likes updated: ", update.data);
+      getHandler("guestbook", guestbookContainer);
+      break;
+    case "deletePost":
+      console.log("Post deleted: ", update.data.id);
+      getHandler("guestbook", guestbookContainer);
+      break;
+    default:
+      console.error("Unknown update recieved: ", update.type);
+  }
+});
