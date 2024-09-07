@@ -63,7 +63,7 @@ async function getHandler(endpoint, container) {
 
     likeButton.textContent = "👍 " + dbData.likes;
     likeButton.className = "like-button";
-    likebutton.setAttribute("aria-label", "Like button");
+    likeButton.setAttribute("aria-label", "Like button");
     likeButton.id = "like" + dbData.id;
 
     div.appendChild(p);
