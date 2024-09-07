@@ -1,7 +1,6 @@
 // ------ Global Variables -------
 const hostPrefix = import.meta.env.VITE_HOST_PREFIX;
 const hostLocation = import.meta.env.VITE_HOST_LOCATION;
-const hostPort = import.meta.env.VITE_HOST_PORT;
 const wsProtocol = import.meta.env.VITE_WS_HOST;
 
 const guestbookContainer = document.getElementById("guestbookContainer");
@@ -17,16 +16,13 @@ async function handleFormSubmit(event, formId, endpoint) {
   const data = Object.fromEntries(formData);
   console.log(data);
   // fetch post request to add new entry to endpoint
-  const response = await fetch(
-    hostPrefix + hostLocation + hostPort + "/" + endpoint,
-    {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(data),
-    }
-  );
+  const response = await fetch(hostPrefix + hostLocation + "/" + endpoint, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(data),
+  });
   //recieve response
   const responseData = await response.json();
   console.log(`From the server (${endpoint}): `, responseData);
@@ -43,9 +39,7 @@ document.getElementById("guestbook").addEventListener("submit", (event) => {
 // --------- GET -----------
 
 async function getHandler(endpoint, container) {
-  const response = await fetch(
-    hostPrefix + hostLocation + hostPort + "/" + endpoint
-  );
+  const response = await fetch(hostPrefix + hostLocation + "/" + endpoint);
   const data = await response.json();
   console.log(data);
   // clear page
@@ -89,7 +83,7 @@ guestbookContainer.addEventListener("click", async function (event) {
     console.log("Delete button clicked for id: " + id);
     // send delete request
     const response = await fetch(
-      hostPrefix + hostLocation + hostPort + "/guestbook/" + id,
+      hostPrefix + hostLocation + "/guestbook/" + id,
       {
         method: "DELETE",
       }
@@ -113,7 +107,7 @@ guestbookContainer.addEventListener("click", async function (event) {
     console.log("Like button pressed for id: " + id);
     // PUT request to increment likes count
     const response = await fetch(
-      hostPrefix + hostLocation + hostPort + "/guestbook/" + id + "/like",
+      hostPrefix + hostLocation + "/guestbook/" + id + "/like",
       {
         method: "PUT",
         headers: {
@@ -144,9 +138,7 @@ guestbookContainer.addEventListener("click", async function (event) {
 
 // ----------- Update ------------
 
-const socket = new WebSocket(
-  wsProtocol + hostLocation + hostPort + "/guestbook"
-);
+const socket = new WebSocket(wsProtocol + hostLocation + "/guestbook");
 
 socket.addEventListener("message", function (event) {
   const update = JSON.parse(event.data);
