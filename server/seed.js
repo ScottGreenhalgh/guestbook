@@ -7,12 +7,17 @@ const db = new pg.Pool({
   connectionString: process.env.DB_URL,
 });
 
-const templateUsername = ["BigSteve", "Jeff", "fancyusername", "Apple"];
+const templateUsername = [
+  "Donkey",
+  "Lord Farquaad",
+  "Gingerbread Man",
+  "Shrek",
+];
 const templateMessage = [
-  "Steve message",
-  "My name is Jeff",
-  "super fancy message",
-  "Fell from a tree",
+  "Donkey, you have the right to remain silent. What you lack is the capacity.",
+  "Some of you may die, but it's a sacrifice Im willing to make.",
+  "Fire up the ovens, Muffin Man! We've got a big order to fill.",
+  "Someday, I will repay you. Unless, of course, I can't find you. Or I forget.",
 ];
 const defaultLikes = 0;
 //PostgreSQL

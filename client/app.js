@@ -53,15 +53,17 @@ async function getHandler(endpoint, container) {
 
     div.className = "message-div";
 
-    p.textContent = `User: ${dbData.username} | Message: ${dbData.message}`;
+    p.textContent = `"${dbData.message}" - ${dbData.username}`;
     p.className = "database-text";
 
     button.textContent = "Delete";
     button.className = "delete-button";
+    button.setAttribute("aria-label", "Delete button");
     button.id = dbData.id;
 
     likeButton.textContent = "👍 " + dbData.likes;
     likeButton.className = "like-button";
+    likebutton.setAttribute("aria-label", "Like button");
     likeButton.id = "like" + dbData.id;
 
     div.appendChild(p);

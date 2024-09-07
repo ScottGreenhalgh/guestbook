@@ -3,23 +3,61 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Guestbook</title>
+    <link
+      rel="apple-touch-icon"
+      sizes="180x180"
+      href="./assets/apple-touch-icon.png"
+    />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="32x32"
+      href="./assets/favicon-32x32.png"
+    />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="16x16"
+      href="./assets/favicon-16x16.png"
+    />
+    <link rel="manifest" href="./assets/site.webmanifest" />
     <link rel="stylesheet" href="style.css" />
-    <script type="module" src="./app.js"></script>
+    <script type="module" src="./app.js" defer></script>
+    <title>Shrek Quotes</title>
   </head>
   <body>
     <!-- Header -->
     <header>
-      <h1>Guestbook</h1>
+      <h1>Shrek Quotes</h1>
     </header>
     <!-- End Header -->
     <!-- Main -->
     <main>
-      <div id="guestbookContainer"></div>
-      <form id="guestbook">
-        <input name="username" placeholder="Name" />
-        <input name="message" placeholder="Sample Message" />
-        <button name="guestdata">Confirm</button>
+      <div aria-live="polite" id="guestbookContainer"></div>
+      <form aria-live="polite" id="guestbook">
+        <input
+          id="username-box"
+          class="input-box"
+          for="text-input"
+          name="name"
+          placeholder=" Who said it"
+          aria-label="who said the quote"
+        />
+        <input
+          id="message-box"
+          class="input-box"
+          for="textarea"
+          name="message"
+          placeholder=" Quote"
+          aria-label="the quote"
+        />
+        <button
+          class="submit-button"
+          name="guestdata"
+          aria-label="submit quote"
+        >
+          Submit
+        </button>
       </form>
     </main>
     <!-- End Main -->

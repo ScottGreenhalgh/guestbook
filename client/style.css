@@ -6,23 +6,37 @@
   overflow-x: hidden;
 }
 
+/* -------- Background ---------- */
+
 body {
-  background-color: gray;
+  background-color: green;
   z-index: -1;
 }
 
 header {
   text-align: center;
+  color: white;
+  font-weight: bold;
+  text-decoration: underline;
+  padding-top: 2rem;
+  padding-bottom: 1rem;
 }
 
+main {
+  padding-bottom: 8rem;
+}
+
+/* ------- Guestbook ------ */
+
 #guestbook {
-  position: absolute;
-  bottom: 1rem;
+  position: fixed;
+  bottom: 0;
   width: 100%;
-  background-color: gray;
+  background-color: darkgreen;
   display: flex;
   padding: 1rem;
   justify-content: center;
+  border-top: white outset 2px;
 }
 
 #guestbookContainer {
@@ -33,14 +47,101 @@ header {
 }
 
 .message-div {
+  position: relative;
   display: flex;
-  background-color: darkmagenta;
+  background-color: darkgreen;
   color: white;
   font-size: 1.5rem;
   width: 80%;
   justify-content: flex-start;
   align-items: center;
-  padding: 1rem;
+  padding: 2rem;
   margin: 1rem 1rem 1rem 10%;
+  border-radius: 1rem 1rem 7rem 1rem;
+  border: white outset 2px;
+}
+
+.database-text {
+  font-style: italic;
+}
+
+/* ------ Buttons ----- */
+
+.like-button {
+  position: absolute;
+  left: 2rem;
+  bottom: 0.33rem;
+  background-color: green;
+  font-size: 1rem;
+  color: white;
+  border-color: white;
   border-radius: 1rem;
+  padding-left: 5px;
+  padding-right: 10px;
+}
+
+.delete-button {
+  position: absolute;
+  right: 0.33rem;
+  top: 0.33rem;
+  background-color: green;
+  font-size: 1rem;
+  color: white;
+  border-color: white;
+  border-radius: 1rem;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+/* ------ Message Boxes -------- */
+
+#message-box {
+  background-color: rgb(51, 235, 51);
+  border: darkolivegreen outset 2px;
+  border-radius: 1rem;
+  padding: 0.5rem;
+}
+
+#message-box:hover {
+  border: gold outset 2px;
+}
+
+#username-box {
+  background-color: rgb(51, 235, 51);
+  border: darkolivegreen outset 2px;
+  border-radius: 1rem;
+  padding: 0.5rem;
+}
+
+#username-box:hover {
+  border: gold outset 2px;
+}
+
+/* ------ Submit -------- */
+
+.submit-button {
+  background-color: rgb(51, 235, 51);
+  border: darkolivegreen outset 2px;
+  border-radius: 1rem;
+  padding: 0.5rem;
+}
+
+.submit-button:active {
+  background-color: gold;
+}
+
+/* ------ Accessibility --------- */
+
+@media (max-width: 767px) {
+  #guestbook {
+    flex-direction: column;
+  }
+}
+
+@media screen and (prefers-reduced-motion: reduced) {
+  * {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
 }
