@@ -75,18 +75,18 @@ After fixing this I got a new error: `net::ERR_SSL_PROTOCOL_ERROR`, indicating a
 
 The requirements completed for this project:
 
--- The HTML form submits data as expected (not into the url as a query)
--- The CSS is styled for multiple screen sizes using using @media.
--- I am using a functioning GET endpoint
--- I am using a functioning POST endpoint
--- I created a seed.js file to create some sample data.
+- The HTML form submits data as expected (not into the url as a query)
+- The CSS is styled for multiple screen sizes using using @media.
+- I am using a functioning GET endpoint
+- I am using a functioning POST endpoint
+- I created a seed.js file to create some sample data.
 
 The additional features added to the project include:
 
--- Created a delete button to remove entries
--- Created a like button to show appreciation to entries
--- Allowed likes to be taken away if already liked, or liked on accident per client
--- Used a websocket to reflect recent database changes on all connected clients
--- Added ARIA live and labels to various elements
+- Created a delete button to remove entries
+- Created a like button to show appreciation to entries
+- Allowed likes to be taken away if already liked, or liked on accident per client
+- Used a websocket to reflect recent database changes on all connected clients
+- Added ARIA live and labels to various elements
 
 The most challenging part of this project was learning SQL syntax. Specifically PostgreSQL, which I learned half way through the project was completely different to DBCC. The syntax looks simple at first but this simplicity did confuse me. Keywords I imagined did one thing didn't do what I initially thought. Since the whole project revolved around manipulating the database to contain the data needed at any given time, a vast majority of this project was spent trying to find the the correct SQL to do what I needed. Thanks to all the previous weeks work, I've got a relatively good understanding of how html, css and javascript operates, however SQL is something I've never touched before.
